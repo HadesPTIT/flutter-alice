@@ -44,6 +44,7 @@ class AliceSaveHelper {
         "Request size: ${AliceConversionHelper.formatBytes(call.request!.size)}\n");
     stringBuffer.write(
         "Request body: ${AliceParser.formatBody(call.request!.body, AliceParser.getContentType(call.request!.headers))}\n");
+    stringBuffer.write("Request params:\n${buildRequestParams(call)} \n");
     stringBuffer.write("--------------------------------------------\n");
     stringBuffer.write("Response\n");
     stringBuffer.write("--------------------------------------------\n");
@@ -73,6 +74,17 @@ class AliceSaveHelper {
     stringBuffer.write("\n");
 
     return stringBuffer.toString();
+  }
+
+  static String buildRequestParams(AliceHttpCall call) {
+    String data = '';
+    final queryParamMap = call.request?.queryParameters;
+    if (queryParamMap?.keys.isNotEmpty ?? false) {
+      queryParamMap!.forEach((query, value) {
+        data += "• $query: ${value.toString()}\n";
+      });
+    }
+    return data;
   }
 
   static Future<String> buildCallLog(AliceHttpCall call) async {
